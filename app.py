@@ -23,7 +23,7 @@ deployment
 Here is an end-to-end Machine Learning project framework following your exact pipeline flow: Customer Churn Prediction.
 
 Complete ML Project Pipeline
-[CSV Data Collection] ➔ [Data Cleaning] ➔ [EDA] ➔ [Feature Engineering] 
+st.caption("[CSV Data Collection] ➔ [Data Cleaning] ➔ [EDA] ➔ [Feature Engineering]")
        ➔ [Model Training] ➔ [Model Testing] ➔ [Evaluation] ➔ [Prediction Score] ➔ [Deployment]
 1. Data Collection from CSV
 Load raw structured data (e.g., Telecom Customer Churn dataset) using Pandas.
