@@ -8,19 +8,12 @@ st.set_page_config(page_title="Laptop Price Predictor", page_icon="💻", layout
 st.title("💻 Laptop Price Predictor")
 st.write("Enter the hardware specifications below to predict the estimated market price.")
 
-# Load pickled models safely
+# Load pickled models with exact file names matching your GitHub repo
 @st.cache_resource
 def load_artifacts():
-    try:
-        df = pickle.load(open('df.pkl(viru)', 'rb'))
-    except:
-        df = pickle.load(open('df_viru.pkl', 'rb'))
-        
-    try:
-        pipe = pickle.load(open('pipe.pkl(viru)', 'rb'))
-    except:
-        pipe = pickle.load(open('pipe_viru.pkl', 'rb'))
-            
+    # Exact names as shown in your GitHub file tree
+    df = pickle.load(open('df.pkl(viru)', 'rb'))
+    pipe = pickle.load(open('pipe.pkl(viru)', 'rb'))
     return df, pipe
 
 df, pipe = load_artifacts()
@@ -72,7 +65,7 @@ if st.button('Predict Price 🚀', use_container_width=True):
     
     pred = pipe.predict(query)[0]
     
-    # Handle log-transformed y target if used during training
+    # Reverse log transform if y = np.log(Price) was used during training
     if pred < 15:
         pred = np.expm1(pred)
         
