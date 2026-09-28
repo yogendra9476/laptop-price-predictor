@@ -2,6 +2,7 @@ import streamlit as st
 import pickle
 import pandas as pd
 import numpy as np
+import urllib.parse
 
 # Explicit imports for unpickling
 import sklearn
@@ -86,4 +87,43 @@ if st.button('Predict Price 🚀', use_container_width=True):
     if pred < 15:
         pred = np.expm1(pred)
         
-    st.success(f"### Estimated Price: ₹ {int(pred):,}")
+    final_price = int(pred)
+    st.success(f"### Estimated Price: ₹ {final_price:,}")
+
+    # ========================================================
+    # 🛒 LIVE RECOMMENDATION SYSTEM (AMAZON & FLIPKART)
+    # ========================================================
+    st.divider()
+    st.subheader("🛒 Recommended Laptops on E-Commerce Platforms")
+    
+    # Budget window: ±10% margin around predicted price
+    min_budget = int(final_price * 0.90)
+    max_budget = int(final_price * 1.10)
+
+    st.markdown(
+        f"Searching for real models matching your configuration in the price bracket "
+        f"**₹{min_budget:,} – ₹{max_budget:,}**:"
+    )
+
+    # Search query combining brand, RAM, CPU, and form factor
+    search_keywords = f"{company} {ram}GB {cpu} laptop"
+
+    # 1. Amazon Query with low-price and high-price filters
+    amazon_encoded_query = urllib.parse.quote_plus(search_keywords)
+    amazon_url = f"https://www.amazon.in/s?k={amazon_encoded_query}&low-price={min_budget}&high-price={max_budget}"
+
+    # 2. Flipkart Query with price range facets
+    flipkart_encoded_query = urllib.parse.quote_plus(search_keywords)
+    flipkart_url = f"https://www.flipkart.com/search?q={flipkart_encoded_query}&p%5B%5D=facets.price_range.from%3D{min_budget}&p%5B%5D=facets.price_range.to%3D{max_budget}"
+
+    rec_col1, rec_col2 = st.columns(2)
+    
+    with rec_col1:
+        st.markdown("#### Amazon India")
+        st.caption(f"Filters: `{company}`, `{ram}GB RAM`, `₹{min_budget:,} - ₹{max_budget:,}`")
+        st.link_button("Search on Amazon 📦", amazon_url, use_container_width=True)
+
+    with rec_col2:
+        st.markdown("#### Flipkart")
+        st.caption(f"Filters: `{company}`, `{ram}GB RAM`, `₹{min_budget:,} - ₹{max_budget:,}`")
+        st.link_button("Search on Flipkart 🛍️", flipkart_url, use_container_width=True)
